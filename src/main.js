@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router/index.js'
-import 'bulma/css/bulma.min.css'
+import './assets/vault.css'
 
 createApp(App).use(router).mount('#app')

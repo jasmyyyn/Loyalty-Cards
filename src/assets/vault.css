@@ -1,0 +1,188 @@
+:root {
+  --radius: 0.75rem;
+  --background: oklch(0.11 0.008 50);
+  --foreground: oklch(0.94 0.01 80);
+  --onyx: oklch(0.08 0.005 40);
+  --charcoal: oklch(0.16 0.008 50);
+  --espresso: oklch(0.22 0.025 45);
+  --burgundy: oklch(0.32 0.13 18);
+  --gold: oklch(0.82 0.13 85);
+  --gold-muted: oklch(0.62 0.09 80);
+  --amber-glow: oklch(0.72 0.16 60);
+  --card: oklch(0.14 0.01 50);
+  --card-foreground: oklch(0.94 0.01 80);
+  --muted-foreground: oklch(0.6 0.02 70);
+  --border: oklch(0.25 0.015 50 / 0.6);
+  --shadow-vault: 0 30px 80px -20px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(255 255 255 / 0.04);
+  --shadow-glow-gold: 0 0 60px -10px oklch(0.78 0.13 80 / 0.45);
+  --font-display: 'Cormorant Garamond', serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at top, oklch(0.32 0.13 18 / 0.18), transparent 55%),
+    radial-gradient(ellipse at bottom right, oklch(0.55 0.17 60 / 0.1), transparent 50%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.7'/></svg>");
+}
+
+#app {
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.5; }
+  50%       { opacity: 1; }
+}
+
+/* ── Vault card shell ───────────────────────────────────── */
+.vault-card {
+  position: relative;
+  border-radius: calc(var(--radius) + 4px);
+  overflow: hidden;
+  box-shadow: var(--shadow-vault);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.5s;
+  cursor: pointer;
+  perspective: 1200px;
+}
+
+.vault-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, oklch(1 0 0 / 0.08) 50%, transparent 70%);
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  transition: background-position 0.9s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.vault-card:hover {
+  transform: translateY(-8px) scale(1.015);
+  box-shadow: var(--shadow-vault), var(--shadow-glow-gold);
+}
+
+.vault-card:hover::after {
+  background-position: 100% 0;
+}
+
+/* ── Grain texture overlay ──────────────────────────────── */
+.grain {
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/></svg>");
+}
+
+/* ── Gold shimmer text ──────────────────────────────────── */
+.gold-text {
+  background: linear-gradient(135deg, oklch(0.92 0.1 90), oklch(0.7 0.13 75), oklch(0.92 0.1 90));
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 3s linear infinite;
+}
+
+/* ── Vault form input ───────────────────────────────────── */
+.vault-input {
+  width: 100%;
+  background: oklch(0.1 0.005 40 / 0.8);
+  border: 1px solid oklch(0.78 0.1 80 / 0.15);
+  border-radius: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  color: var(--foreground);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.vault-input::placeholder {
+  color: oklch(0.5 0.02 60);
+}
+
+.vault-input:focus {
+  outline: none;
+  border-color: oklch(0.82 0.13 85 / 0.5);
+  box-shadow: 0 0 0 3px oklch(0.82 0.13 85 / 0.12);
+}
+
+/* ── Vault buttons ──────────────────────────────────────── */
+.vault-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  border: none;
+  font-weight: 600;
+}
+
+.vault-btn-gold {
+  background: oklch(0.82 0.13 85);
+  color: oklch(0.1 0.005 40);
+}
+
+.vault-btn-gold:hover {
+  background: oklch(0.88 0.13 88);
+  box-shadow: 0 0 20px oklch(0.82 0.13 85 / 0.35);
+}
+
+.vault-btn-outline {
+  background: transparent;
+  color: oklch(0.6 0.02 70);
+  border: 1px solid oklch(0.25 0.015 50 / 0.6);
+}
+
+.vault-btn-outline:hover {
+  color: var(--foreground);
+  border-color: oklch(0.4 0.02 60);
+}
